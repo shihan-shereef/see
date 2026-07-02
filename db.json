@@ -1,0 +1,118 @@
+{
+  "users": [
+    {
+      "email": "shihanshereef2@gmail.com",
+      "password": "Shi@2004",
+      "name": "Shihan Shereef",
+      "avatarUrl": ""
+    }
+  ],
+  "workspaces": [
+    {
+      "_id": "dev-workspace",
+      "name": "Ollagraphic Workspace"
+    }
+  ],
+  "members": [
+    {
+      "_id": "mem_1",
+      "workspaceId": "dev-workspace",
+      "email": "shihanshereef2@gmail.com",
+      "name": "Shihan Shereef",
+      "role": "admin"
+    },
+    {
+      "_id": "mem_1782967683204",
+      "workspaceId": "dev-workspace",
+      "email": "rahulkn006@gmail.com",
+      "role": "admin"
+    }
+  ],
+  "apiKeys": [
+    {
+      "_id": "key_1782967727144",
+      "workspaceId": "dev-workspace",
+      "name": "shihan",
+      "key": "osk_live_mhg6cry1wcpertox9y99vc",
+      "createdAt": 1782967727144
+    }
+  ],
+  "jobs": [
+    {
+      "_id": "job_1782967757528",
+      "workspaceId": "dev-workspace",
+      "kind": "demo",
+      "status": "done",
+      "input": {
+        "prompt": "hello world",
+        "requestedAt": "2026-07-02T04:49:17.504Z"
+      },
+      "result": {
+        "output": "Processed after recovery",
+        "kind": "demo",
+        "processedAt": "2026-07-02T05:05:27Z"
+      },
+      "error": null,
+      "createdAt": 1782967757528,
+      "updatedAt": 1782968727822
+    },
+    {
+      "_id": "job_1782967634977",
+      "workspaceId": "dev-workspace",
+      "kind": "demo",
+      "status": "done",
+      "input": {
+        "prompt": "hello world",
+        "requestedAt": "2026-07-02T04:47:14.877Z"
+      },
+      "result": {
+        "output": "Processed after recovery",
+        "kind": "demo",
+        "processedAt": "2026-07-02T05:05:27Z"
+      },
+      "error": null,
+      "createdAt": 1782967634977,
+      "updatedAt": 1782968727822
+    },
+    {
+      "_id": "job_1782967615739",
+      "workspaceId": "dev-workspace",
+      "kind": "demo",
+      "status": "done",
+      "input": {
+        "prompt": "hello world",
+        "requestedAt": "2026-07-02T04:46:55.683Z"
+      },
+      "result": {
+        "output": "Processed after recovery",
+        "kind": "demo",
+        "processedAt": "2026-07-02T05:05:27Z"
+      },
+      "error": null,
+      "createdAt": 1782967615739,
+      "updatedAt": 1782968727822
+    }
+  ],
+  "audits": [
+    {
+      "_id": "act_1782967727144",
+      "action": "API key created: shihan",
+      "at": 1782967727144
+    },
+    {
+      "_id": "act_1782967683204",
+      "action": "Member invited: rahulkn006@gmail.com",
+      "at": 1782967683204
+    },
+    {
+      "_id": "act_1",
+      "action": "Account created: shihanshereef2@gmail.com",
+      "at": 1751320200000
+    },
+    {
+      "_id": "act_2",
+      "action": "Workspace created: Ollagraphic Workspace",
+      "at": 1751320210000
+    }
+  ]
+}
