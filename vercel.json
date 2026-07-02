@@ -1,10 +1,24 @@
 {
-  "buildCommand": "cd apps/app && SKIP_ENV_VALIDATION=1 npx next build",
-  "outputDirectory": "apps/app/.next",
-  "installCommand": "npm install --legacy-peer-deps",
-  "framework": "nextjs",
+  "version": 2,
+  "name": "ollagraphic-seo",
+  "builds": [
+    {
+      "src": "apps/app/package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "apps/app/$1"
+    }
+  ],
   "env": {
-    "NEXT_PUBLIC_CONVEX_URL": "http://placeholder.convex.cloud",
+    "NEXT_PUBLIC_CONVEX_URL": "https://placeholder.convex.cloud",
+    "SKIP_ENV_VALIDATION": "1"
+  },
+  "buildEnv": {
+    "NEXT_PUBLIC_CONVEX_URL": "https://placeholder.convex.cloud",
     "SKIP_ENV_VALIDATION": "1"
   }
 }
