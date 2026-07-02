@@ -26,6 +26,12 @@
       "workspaceId": "dev-workspace",
       "email": "rahulkn006@gmail.com",
       "role": "admin"
+    },
+    {
+      "_id": "mem_1782970912726",
+      "workspaceId": "dev-workspace",
+      "email": "harshitha.j2121@gmail.com",
+      "role": "member"
     }
   ],
   "apiKeys": [
@@ -94,6 +100,11 @@
     }
   ],
   "audits": [
+    {
+      "_id": "act_1782970912726",
+      "action": "Member invited: harshitha.j2121@gmail.com",
+      "at": 1782970912726
+    },
     {
       "_id": "act_1782967727144",
       "action": "API key created: shihan",
