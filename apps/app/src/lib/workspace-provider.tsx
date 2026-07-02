@@ -29,9 +29,9 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
   const [ensuring, setEnsuring] = useState(false);
 
   useEffect(() => {
-    if (dbWorkspaces === undefined && process.env.NODE_ENV !== "development") return;
+    if (dbWorkspaces === undefined) return;
     if (workspaces.length === 0) {
-      if (!ensuring && process.env.NODE_ENV !== "development") {
+      if (!ensuring) {
         setEnsuring(true);
         void ensure({}).finally(() => setEnsuring(false));
       }

@@ -14,32 +14,15 @@ export default async function Layout({
   children,
 }: { children: React.ReactNode }) {
   let user: any = null;
-  if (process.env.NODE_ENV === "development") {
-    const email = cookies().get("mock_auth")?.value;
-    if (email) {
-      const db = getDb();
-      const matched = db.users.find((u) => u.email.toLowerCase() === email.toLowerCase());
-      if (matched) {
-        user = { ...matched, username: matched.email.split("@")[0] };
-      }
-    }
-    if (!user) {
-      user = { username: "developer", name: "Local Developer", email: "dev@local.com" };
-    }
-  } else {
-    user = { username: "developer", name: "Local Developer", email: "dev@local.com" };
-  }
-  if (process.env.NODE_ENV !== "development") {
-    try {
-      const dbUser = await fetchQuery(
-        api.users.getUser,
-        {},
-        { token: await convexAuthNextjsToken() },
-      );
-      if (dbUser) user = dbUser;
-    } catch (e) {
-      console.warn("Convex connection failed, using local developer session.");
-    }
+  try {
+    const dbUser = await fetchQuery(
+      api.users.getUser,
+      {},
+      { token: await convexAuthNextjsToken() },
+    );
+    if (dbUser) user = dbUser;
+  } catch (e) {
+    console.warn("Convex connection failed, redirecting to login.");
   }
   if (!user?.username) {
     return redirect("/onboarding");

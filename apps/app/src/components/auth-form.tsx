@@ -1,8 +1,8 @@
 "use client";
 
+import { useAuthActions } from "@convex-dev/auth/react";
 import { Button } from "@v1/ui/button";
 import { useState } from "react";
-import { createClient } from "@/utils/supabase/client";
 
 type Mode = "signIn" | "signUp";
 
@@ -10,29 +10,22 @@ const inputCls =
   "w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring";
 
 export function AuthForm() {
+  const { signIn } = useAuthActions();
   const [mode, setMode] = useState<Mode>("signIn");
   const [email, setEmail] = useState("shihanshereef2@gmail.com");
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleCredentials = async (e: React.FormEvent) => {
+  const handle = (flow: Mode) => async (e: React.FormEvent) => {
     e.preventDefault();
-    setPending(true);
     setError(null);
-    const supabase = createClient();
-    
-    // Using mock auth behavior for the email flow too
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google", // we mock it using the same method for now
-      options: {
-        redirectTo: `${window.location.origin}/api/auth/callback`,
-      },
-    });
-
-    if (error) {
-      console.error(error);
-      setError((error as any).message || "An error occurred");
+    setPending(true);
+    try {
+      await signIn("password", { email, password, flow });
+    } catch (err: any) {
+      setError(err?.message || "Invalid email or password");
+    } finally {
       setPending(false);
     }
   };
@@ -40,18 +33,10 @@ export function AuthForm() {
   const handleGoogle = async () => {
     setPending(true);
     setError(null);
-    const supabase = createClient();
-    
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/api/auth/callback`,
-      },
-    });
-
-    if (error) {
-      console.error(error);
-      setError((error as any).message || "An error occurred");
+    try {
+      await signIn("google");
+    } catch (err: any) {
+      setError("Failed to sign in with Google");
       setPending(false);
     }
   };
@@ -60,7 +45,8 @@ export function AuthForm() {
     <div className="flex flex-col items-center gap-3">
       <form
         className="flex w-72 flex-col gap-3"
-        onSubmit={handleCredentials}
+        onSubmit={handle(mode)}
+        suppressHydrationWarning
       >
         <input
           className={inputCls}
@@ -70,6 +56,7 @@ export function AuthForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
+          suppressHydrationWarning
         />
         <input
           className={inputCls}
@@ -79,11 +66,12 @@ export function AuthForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete={mode === "signIn" ? "current-password" : "new-password"}
+          suppressHydrationWarning
         />
-        <Button type="submit" disabled={pending} className="font-mono">
+        <Button type="submit" disabled={pending} className="font-mono" suppressHydrationWarning>
           {pending ? "…" : mode === "signIn" ? "Sign in" : "Create account"}
         </Button>
-        {error && <p className="text-xs text-red-500">{error}</p>}
+        {error && <p className="text-xs text-red-500" suppressHydrationWarning>{error}</p>}
       </form>
 
       <div className="flex w-72 justify-between">

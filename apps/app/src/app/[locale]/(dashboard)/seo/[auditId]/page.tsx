@@ -41,7 +41,7 @@ export default function SeoReportDetailsPage() {
   }, []);
 
   const auditId = params.auditId as string;
-  const isOffline = process.env.NODE_ENV === "development" || auditId.startsWith("local_");
+  const isOffline = false || auditId.startsWith("local_");
 
   const dbAudit = useQuery(
     api.seo.get,

@@ -7,7 +7,7 @@ import { Activity, Boxes, FileText, ListChecks, Users } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const isOffline = process.env.NODE_ENV === "development";
+const isOffline = false;
 
 function Stat({
   icon: Icon,

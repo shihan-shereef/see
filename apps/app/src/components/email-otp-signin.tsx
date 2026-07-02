@@ -22,7 +22,7 @@ export function EmailOtpSignin() {
           setError(null);
           const fd = new FormData(e.currentTarget);
           setPending(true);
-          const isOffline = process.env.NODE_ENV === "development";
+          const isOffline = false;
           if (isOffline) {
             await new Promise((r) => setTimeout(r, 600));
             setStep({ email: fd.get("email") as string });
@@ -58,7 +58,7 @@ export function EmailOtpSignin() {
         setError(null);
         const fd = new FormData(e.currentTarget);
         setPending(true);
-        const isOffline = process.env.NODE_ENV === "development";
+        const isOffline = false;
         if (isOffline) {
           await new Promise((r) => setTimeout(r, 600));
           document.cookie = "mock_auth=true; path=/";

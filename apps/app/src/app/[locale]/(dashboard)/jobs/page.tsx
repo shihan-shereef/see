@@ -15,7 +15,7 @@ const statusStyles: Record<string, string> = {
   error: "bg-red-500/10 text-red-600 ring-red-600/20",
 };
 
-const isOffline = process.env.NODE_ENV === "development";
+const isOffline = false;
 
 export default function JobsPage() {
   const params = useParams();

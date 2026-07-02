@@ -41,7 +41,7 @@ function Empty({ children }: { children: React.ReactNode }) {
   return <div className="px-4 py-4 text-sm text-primary/40">{children}</div>;
 }
 
-const isOffline = process.env.NODE_ENV === "development";
+const isOffline = false;
 
 export default function PlatformPage() {
   const params = useParams();

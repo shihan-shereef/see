@@ -46,7 +46,7 @@ export default function SeoDashboardPage() {
     return [];
   });
 
-  const isOffline = process.env.NODE_ENV === "development";
+  const isOffline = false;
 
   const {
     results: dbAudits,
