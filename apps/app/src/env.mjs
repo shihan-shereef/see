@@ -13,12 +13,16 @@ export const env = createEnv({
     NEXT_PUBLIC_CONVEX_URL: z.string(),
     NEXT_PUBLIC_OPENPANEL_CLIENT_ID: z.optional(z.string()),
     NEXT_PUBLIC_SENTRY_DSN: z.optional(z.string()),
+    NEXT_PUBLIC_SUPABASE_URL: z.string().optional(),
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
   },
   runtimeEnv: {
     NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL,
     NEXT_PUBLIC_OPENPANEL_CLIENT_ID:
       process.env.NEXT_PUBLIC_OPENPANEL_CLIENT_ID,
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     PORT: process.env.PORT,
     VERCEL_URL: process.env.VERCEL_URL,
   },

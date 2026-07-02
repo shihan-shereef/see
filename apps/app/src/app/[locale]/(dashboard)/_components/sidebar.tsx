@@ -1,7 +1,7 @@
 "use client";
 
 import { useWorkspace } from "@/lib/useWorkspace";
-import { useAuthActions } from "@convex-dev/auth/react";
+import { createClient } from "@/utils/supabase/client";
 import { api } from "@v1/backend/convex/_generated/api";
 import type { Id } from "@v1/backend/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
@@ -35,7 +35,6 @@ const NAV = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { signOut } = useAuthActions();
   const dbUser = useQuery(api.users.getUser);
   const user = dbUser || { name: "Local Developer", email: "dev@local.com", avatarUrl: null };
   const { workspaces, current, select } = useWorkspace();
@@ -107,12 +106,9 @@ export function Sidebar() {
           <button
             type="button"
             onClick={async () => {
-              if (process.env.NODE_ENV === "development") {
-                await fetch("/api/logout", { method: "POST", credentials: "same-origin" }).catch(() => null);
-                window.location.href = "/login";
-                return;
-              }
-              await signOut();
+              const supabase = createClient();
+              await supabase.auth.signOut();
+              window.location.href = "/login";
             }}
             className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-primary/60 hover:bg-primary/5 hover:text-primary"
           >

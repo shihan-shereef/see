@@ -1,5 +1,6 @@
 import { createI18nMiddleware } from "next-international/middleware";
 import { type NextRequest, NextResponse } from "next/server";
+import { updateSession } from "@/utils/supabase/middleware";
 
 const I18nMiddleware = createI18nMiddleware({
   locales: ["en", "fr", "es"],
@@ -19,52 +20,53 @@ function isPublicPath(pathname: string): boolean {
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 1. Skip all static assets and API routes entirely
+  // 1. Skip all static assets and API routes entirely, except the auth callback
   if (
     pathname.startsWith("/_next") ||
-    pathname.startsWith("/api/") ||
+    (pathname.startsWith("/api/") && !pathname.startsWith("/api/auth/callback")) ||
     /\.(ico|png|jpg|jpeg|svg|webp|gif|css|js|woff2?)$/.test(pathname)
   ) {
     return NextResponse.next();
   }
 
-  const isDev = process.env.NODE_ENV === "development";
+  // 2. Update Supabase Session
+  const { supabaseResponse, user } = await updateSession(request);
+  const isLoggedIn = !!user;
+  const isPub = isPublicPath(pathname);
 
-  if (isDev) {
-    const mockAuth = request.cookies.get("mock_auth")?.value;
-    const isLoggedIn = !!mockAuth;
-    const isPub = isPublicPath(pathname);
-
-    if (isPub && isLoggedIn) {
-      // Already authenticated → send to SEO dashboard
-      return NextResponse.redirect(new URL("/seo", request.url));
-    }
-
-    if (!isPub && !isLoggedIn) {
-      // Not logged in → send to login
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-
-    // Authenticated on a normal page OR on public page without auth → i18n rewrite
-    return I18nMiddleware(request);
+  // 3. Handle Redirects
+  if (isPub && isLoggedIn) {
+    // Already authenticated on a public page → send to SEO dashboard
+    const redirectUrl = new URL("/seo", request.url);
+    const res = NextResponse.redirect(redirectUrl);
+    // Copy cookies from supabaseResponse to the redirect response
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      res.cookies.set(cookie.name, cookie.value, cookie);
+    });
+    return res;
   }
 
-  // ── Production: delegate to Convex Auth ──────────────────────────────
-  const {
-    convexAuthNextjsMiddleware,
-    createRouteMatcher,
-    nextjsMiddlewareRedirect,
-  } = await import("@convex-dev/auth/nextjs/server");
+  if (!isPub && !isLoggedIn && !pathname.startsWith("/api/auth/callback")) {
+    // Not logged in and trying to access protected route → send to login
+    const redirectUrl = new URL("/login", request.url);
+    const res = NextResponse.redirect(redirectUrl);
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      res.cookies.set(cookie.name, cookie.value, cookie);
+    });
+    return res;
+  }
 
-  const isSignInPage = createRouteMatcher(["/login", "/:locale/login"]);
+  // 4. Apply i18n mapping if not an API route
+  if (!pathname.startsWith("/api/")) {
+    const i18nResponse = I18nMiddleware(request);
+    // Copy cookies from supabaseResponse to i18nResponse
+    supabaseResponse.cookies.getAll().forEach((cookie) => {
+      i18nResponse.cookies.set(cookie.name, cookie.value, cookie);
+    });
+    return i18nResponse;
+  }
 
-  return convexAuthNextjsMiddleware(async (req, { convexAuth }) => {
-    const isAuthenticated = await convexAuth.isAuthenticated();
-    const isSignIn = isSignInPage(req);
-    if (isSignIn && isAuthenticated) return nextjsMiddlewareRedirect(req, "/seo");
-    if (!isSignIn && !isAuthenticated) return nextjsMiddlewareRedirect(req, "/login");
-    return I18nMiddleware(req);
-  })(request, {} as any);
+  return supabaseResponse;
 }
 
 export const config = {
