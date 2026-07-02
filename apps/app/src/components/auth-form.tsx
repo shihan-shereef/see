@@ -32,7 +32,7 @@ export function AuthForm() {
 
     if (error) {
       console.error(error);
-      setError(error.message);
+      setError((error as any).message || "An error occurred");
       setPending(false);
     }
   };
@@ -51,7 +51,7 @@ export function AuthForm() {
 
     if (error) {
       console.error(error);
-      setError(error.message);
+      setError((error as any).message || "An error occurred");
       setPending(false);
     }
   };
