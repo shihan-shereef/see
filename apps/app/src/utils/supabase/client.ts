@@ -4,7 +4,8 @@ export function createClient() {
     auth: {
       async signInWithOAuth({ provider, options }: any) {
         // Mock setting a cookie for the frontend
-        document.cookie = "mock_supabase_session=mock-token; path=/;";
+        const isProd = window.location.protocol === "https:";
+        document.cookie = `mock_supabase_session=mock-token; path=/; ${isProd ? "Secure; SameSite=Lax;" : ""}`;
         
         // Mock successful login redirection
         if (options?.redirectTo) {
